@@ -35,14 +35,14 @@ THE SOFTWARE.
         <!-- From https://angularjs.org/ -->
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular.min.js"></script>
         <script>
-            var pcApp = angular.module('pcApp', []);
-            pcApp.controller('productCodeCtrl', function($scope, $http) {
-                var baseUrl = '/CSD4464-JAX-RS-2019W/api/productCode';
-                $scope.productCodeList = [];
+            var pApp = angular.module('pApp', []);
+            pApp.controller('productCtrl', function($scope, $http) {
+                var baseUrl = '/CSD4464-JAX-RS-2019W/api/product';
+                $scope.productList = [];
                 function getItems() {
                     $http.get(baseUrl).then(
-                        function(productCodes){
-                            $scope.productCodeList = productCodes.data;
+                        function(products){
+                            $scope.productList = products.data;
                         },
                         function(error){
                             alert(error.message);
@@ -50,12 +50,11 @@ THE SOFTWARE.
                 }
                 getItems();
                 $scope.addItem = function() {
-                    newProductCode = {
-                        prodCode: $scope.newProdCode,
-                        discountCode: $scope.newDiscountCode,
+                    newProduct = {
+                        prodId: $scope.newProdId,
                         description: $scope.newDescription
                     }
-                    $http.post(baseUrl, newProductCode).then(
+                    $http.post(baseUrl, newProduct).then(
                         function() {
                             // Timeout needed because updates happen too fast
                             setTimeout(getItems(), 500);
@@ -67,12 +66,11 @@ THE SOFTWARE.
                 };
                 
                 $scope.editItem = function() {
-                    editProductCode = {
-                        prodCode: $scope.editProdCode,
-                        discountCode: $scope.editDiscountCode,
-                        description: $scope.editDescription,
+                    editProduct = {
+                        prodCode: $scope.editProdId,                       
+                        description: $scope.editDescription
                     };
-                    $http.put(baseUrl + '/' + $scope.editProdCode, editProductCode).then(
+                    $http.put(baseUrl + '/' + $scope.editProdCode, editProduct).then(
                         function() {
                             setTimeout(getItems(), 500);
                         },
@@ -83,7 +81,7 @@ THE SOFTWARE.
                 };
                 
                 $scope.delItem = function() {                    
-                    $http.delete(baseUrl + '/' + $scope.delProdCode).then(
+                    $http.delete(baseUrl + '/' + $scope.delProd).then(
                         function() {
                             setTimeout(getItems(), 500);
                         },
@@ -96,22 +94,20 @@ THE SOFTWARE.
         </script>
     </head>
     <body>
-        <div ng-app="pcApp" class="container">
-            <div class="row" ng-controller="productCodeCtrl">
+        <div ng-app="pApp" class="container">
+            <div class="row" ng-controller="productCtrl">
                 <div class="col-md-6">
                     <table class="table">
                         <thead class="thead-dark">
                             <tr>
-                                <th>Product Code</th>
-                                <th>Discount Code</th>
+                                <th>Product Code</th>                               
                                 <th>Description</th>
                             </tr>
                         </thead>
                         <tbody id="product-table">
-                            <tr ng-repeat="productCode in productCodeList">
-                                <td>{{ productCode.prodCode }}</td>
-                                <td>{{ productCode.discountCode }}</td>
-                                <td>{{ productCode.description }}</td>
+                            <tr ng-repeat="product in productList">
+                                <td>{{ product.productId }}</td>                                
+                                <td>{{ product.description }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -119,11 +115,8 @@ THE SOFTWARE.
                 <div class="col-md-6">
                     <h1>Add Product</h1>
                     <div class="form-group">
-                        <label>Product Code <input class="form-control" ng-model="newProdCode" /></label>
-                    </div>
-                    <div class="form-group">
-                        <label>Discount Code <input class="form-control" ng-model="newDiscountCode" /></label>
-                    </div>
+                        <label>Product ID<input class="form-control" ng-model="newProdId" /></label>
+                    </div>                 
                     <div class="form-group">
                         <label>Description <input class="form-control" ng-model="newDescription" /></label>
                     </div>
@@ -131,10 +124,7 @@ THE SOFTWARE.
                     
                     <h1>Edit Product</h1>
                     <div class="form-group">
-                        <label>Product Code <input class="form-control" ng-model="editProdCode" /></label>
-                    </div>
-                    <div class="form-group">
-                        <label>Discount Code <input class="form-control" ng-model="editDiscountCode" /></label>
+                        <label>Product<input class="form-control" ng-model="editProdId" /></label>
                     </div>
                     <div class="form-group">
                         <label>Description <input class="form-control" ng-model="editDescription" /></label>
@@ -143,7 +133,7 @@ THE SOFTWARE.
                     
                     <h1>Delete Product</h1>
                     <div class="form-group">
-                        <label>Product Code <input class="form-control" ng-model="delProdCode" /></label>
+                        <label>Product Id <input class="form-control" ng-model="delProd" /></label>
                     </div>
                     <button class="btn btn-danger" ng-click="delItem()">Delete</button>
 

@@ -35,14 +35,14 @@ THE SOFTWARE.
         <!-- From https://angularjs.org/ -->
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular.min.js"></script>
         <script>
-            var pcApp = angular.module('pcApp', []);
-            pcApp.controller('productCodeCtrl', function($scope, $http) {
-                var baseUrl = '/CSD4464-JAX-RS-2019W/api/productCode';
-                $scope.productCodeList = [];
+            var mApp = angular.module('mApp', []);
+            mApp.controller('manufacturerCtrl', function($scope, $http) {
+                var baseUrl = '/CSD4464-JAX-RS-2019W/api/manufacturer';
+                $scope.manufacturerList = [];
                 function getItems() {
                     $http.get(baseUrl).then(
-                        function(productCodes){
-                            $scope.productCodeList = productCodes.data;
+                        function(manufacturers){
+                            $scope.manufacturerList = manufacturers.data;
                         },
                         function(error){
                             alert(error.message);
@@ -50,12 +50,11 @@ THE SOFTWARE.
                 }
                 getItems();
                 $scope.addItem = function() {
-                    newProductCode = {
-                        prodCode: $scope.newProdCode,
-                        discountCode: $scope.newDiscountCode,
-                        description: $scope.newDescription
+                    newManufacturer = {
+                        manId: $scope.newManId,
+                        name: $scope.newName                     
                     }
-                    $http.post(baseUrl, newProductCode).then(
+                    $http.post(baseUrl, newManufacturer).then(
                         function() {
                             // Timeout needed because updates happen too fast
                             setTimeout(getItems(), 500);
@@ -67,12 +66,11 @@ THE SOFTWARE.
                 };
                 
                 $scope.editItem = function() {
-                    editProductCode = {
-                        prodCode: $scope.editProdCode,
-                        discountCode: $scope.editDiscountCode,
-                        description: $scope.editDescription,
+                    editManufacturer = {
+                        manId: $scope.editManId,
+                        name: $scope.editName
                     };
-                    $http.put(baseUrl + '/' + $scope.editProdCode, editProductCode).then(
+                    $http.put(baseUrl + '/' + $scope.editManufacturer, editManufacturer).then(
                         function() {
                             setTimeout(getItems(), 500);
                         },
@@ -83,7 +81,7 @@ THE SOFTWARE.
                 };
                 
                 $scope.delItem = function() {                    
-                    $http.delete(baseUrl + '/' + $scope.delProdCode).then(
+                    $http.delete(baseUrl + '/' + $scope.delMan).then(
                         function() {
                             setTimeout(getItems(), 500);
                         },
@@ -96,54 +94,47 @@ THE SOFTWARE.
         </script>
     </head>
     <body>
-        <div ng-app="pcApp" class="container">
-            <div class="row" ng-controller="productCodeCtrl">
+        <div ng-app="mApp" class="container">
+            <div class="row" ng-controller="manufacturerCtrl">
                 <div class="col-md-6">
                     <table class="table">
                         <thead class="thead-dark">
                             <tr>
-                                <th>Product Code</th>
-                                <th>Discount Code</th>
-                                <th>Description</th>
+                                <th>Manufacturer Id</th>
+                                <th>Manufacturer Name</th>
+                                
                             </tr>
                         </thead>
-                        <tbody id="product-table">
-                            <tr ng-repeat="productCode in productCodeList">
-                                <td>{{ productCode.prodCode }}</td>
-                                <td>{{ productCode.discountCode }}</td>
-                                <td>{{ productCode.description }}</td>
+                        <tbody id="manufacturer-table">
+                            <tr ng-repeat="manufacturer in manufacturerList">
+                                <td>{{ manufacturer.manufacturerId }}</td>
+                                <td>{{ manufacturer.name }}</td>                                
                             </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="col-md-6">
-                    <h1>Add Product</h1>
+                    <h1>Add Manufacturer</h1>
                     <div class="form-group">
-                        <label>Product Code <input class="form-control" ng-model="newProdCode" /></label>
+                        <label>Manufacturer Id<input class="form-control" ng-model="newManId" /></label>
                     </div>
                     <div class="form-group">
-                        <label>Discount Code <input class="form-control" ng-model="newDiscountCode" /></label>
-                    </div>
-                    <div class="form-group">
-                        <label>Description <input class="form-control" ng-model="newDescription" /></label>
+                        <label>Name <input class="form-control" ng-model="newName" /></label>
                     </div>
                     <button class="btn btn-success" ng-click="addItem()">Add</button>
                     
-                    <h1>Edit Product</h1>
+                    <h1>Edit Manufacturer</h1>
                     <div class="form-group">
-                        <label>Product Code <input class="form-control" ng-model="editProdCode" /></label>
+                        <label>Manufacturer ID <input class="form-control" ng-model="editManId" /></label>
                     </div>
                     <div class="form-group">
-                        <label>Discount Code <input class="form-control" ng-model="editDiscountCode" /></label>
-                    </div>
-                    <div class="form-group">
-                        <label>Description <input class="form-control" ng-model="editDescription" /></label>
+                        <label>Name <input class="form-control" ng-model="editName" /></label>
                     </div>
                     <button class="btn btn-warning" ng-click="editItem()">Edit</button>
                     
                     <h1>Delete Product</h1>
                     <div class="form-group">
-                        <label>Product Code <input class="form-control" ng-model="delProdCode" /></label>
+                        <label>Product Code <input class="form-control" ng-model="delMan" /></label>
                     </div>
                     <button class="btn btn-danger" ng-click="delItem()">Delete</button>
 
